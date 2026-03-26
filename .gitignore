@@ -20,7 +20,7 @@ env/
 
 # Model outputs
 results/models/
-results/figures/
+# results/figures/
 
 # Data
 data/processed/
