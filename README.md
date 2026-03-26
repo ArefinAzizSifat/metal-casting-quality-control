@@ -118,6 +118,8 @@ METAL_CASTING_QC/
 ├── .gitignore
 ├── README.md
 └── requirements.txt
+```
+
 ## 5. Workflow
 
 The project was developed as a complete machine learning pipeline:
@@ -303,6 +305,7 @@ This type of error is critical because a faulty product may pass inspection and 
 ```text
 [[64  7]
  [ 4 57]]
+```
 
  #### Training Curves
 
@@ -332,6 +335,7 @@ The baseline CNN achieved the strongest overall performance. It classified both 
 ```text
 [[60 11]
  [16 45]]
+```
 #### Training Curves
 
 ##### Accuracy Curve
@@ -412,16 +416,19 @@ In real-world systems, model selection often requires balancing:
 conda create -n metal_casting_qc python=3.11
 conda activate metal_casting_qc
 pip install -r requirements.txt
+```
 ### 13.2 Train a Model
 
 Set the model type inside `src/train.py`:
 
 ```python
 MODEL_TYPE = "baseline"   # or "improved"
+```
 Then run:
 
 ```bash
 python src/train.py
+```
 
 ### 13.3 Evaluate a Model
 
@@ -429,10 +436,12 @@ Set the model type inside `src/evaluate.py`:
 
 ```python
 MODEL_TYPE = "baseline"   # or "improved"
+```
 Then run:
 
 ```bash
 python src/evaluate.py
+```
 
 ## 14. Limitations
 
