@@ -55,6 +55,28 @@ def save_prediction_distribution_figure(y_pred_prob):
     print(f"Prediction probability figure saved to: {save_path}")
 
 
+def save_classification_report_file(acc, prec, rec, f1, cm, report_text, class_names):
+    save_path = FIGURES_DIR / "classification_report.txt"
+
+    with open(save_path, "w", encoding="utf-8") as file:
+        file.write("EVALUATION RESULTS\n")
+        file.write("=" * 60 + "\n")
+        file.write(f"Class names: {class_names}\n")
+        file.write(f"Accuracy : {acc:.4f}\n")
+        file.write(f"Precision: {prec:.4f}\n")
+        file.write(f"Recall   : {rec:.4f}\n")
+        file.write(f"F1-score : {f1:.4f}\n\n")
+
+        file.write("Confusion Matrix:\n")
+        file.write(f"{cm}\n\n")
+
+        file.write("Classification Report:\n")
+        file.write(report_text)
+        file.write("\n")
+
+    print(f"Classification report saved to: {save_path}")
+
+
 def evaluate_model():
     ensure_paths()
 
@@ -78,6 +100,9 @@ def evaluate_model():
     rec = recall_score(y_true, y_pred, zero_division=0)
     f1 = f1_score(y_true, y_pred, zero_division=0)
     cm = confusion_matrix(y_true, y_pred)
+    report_text = classification_report(
+        y_true, y_pred, target_names=class_names, zero_division=0
+    )
 
     print("=" * 60)
     print("EVALUATION RESULTS")
@@ -94,11 +119,12 @@ def evaluate_model():
     print()
 
     print("Classification Report:")
-    print(classification_report(y_true, y_pred, target_names=class_names, zero_division=0))
+    print(report_text)
     print("=" * 60)
 
     save_confusion_matrix_figure(cm, class_names)
     save_prediction_distribution_figure(y_pred_prob)
+    save_classification_report_file(acc, prec, rec, f1, cm, report_text, class_names)
 
 
 if __name__ == "__main__":
