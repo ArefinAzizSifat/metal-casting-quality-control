@@ -14,52 +14,62 @@ from sklearn.metrics import (
 
 from data_preparation import create_datasets
 
+MODEL_TYPE = "improved"   # "baseline" or "improved"
 DATASET_PATH = "data/raw"
-MODEL_PATH = "results/models/baseline_cnn.keras"
 FIGURES_DIR = Path("results/figures")
 
+MODEL_PATHS = {
+    "baseline": "results/models/baseline_cnn.keras",
+    "improved": "results/models/improved_cnn.keras",
+}
 
-def ensure_paths():
-    if not Path(MODEL_PATH).exists():
-        raise FileNotFoundError(f"Saved model not found: {MODEL_PATH}")
+FILE_PREFIX = {
+    "baseline": "baseline",
+    "improved": "improved",
+}
+
+
+def ensure_paths(model_path):
+    if not Path(model_path).exists():
+        raise FileNotFoundError(f"Saved model not found: {model_path}")
 
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
 
-def save_confusion_matrix_figure(cm, class_names):
+def save_confusion_matrix_figure(cm, class_names, model_type):
     fig, ax = plt.subplots(figsize=(6, 6))
     disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=class_names)
     disp.plot(ax=ax, cmap="Blues", colorbar=False)
-    plt.title("Confusion Matrix")
+    plt.title(f"{model_type.capitalize()} CNN - Confusion Matrix")
     plt.tight_layout()
 
-    save_path = FIGURES_DIR / "confusion_matrix.png"
+    save_path = FIGURES_DIR / f"{FILE_PREFIX[model_type]}_confusion_matrix.png"
     plt.savefig(save_path, dpi=300, bbox_inches="tight")
     plt.close()
 
     print(f"Confusion matrix figure saved to: {save_path}")
 
 
-def save_prediction_distribution_figure(y_pred_prob):
+def save_prediction_distribution_figure(y_pred_prob, model_type):
     fig, ax = plt.subplots(figsize=(8, 5))
     ax.hist(y_pred_prob, bins=20)
-    ax.set_title("Prediction Probability Distribution")
+    ax.set_title(f"{model_type.capitalize()} CNN - Prediction Probability Distribution")
     ax.set_xlabel("Predicted Probability")
     ax.set_ylabel("Frequency")
     plt.tight_layout()
 
-    save_path = FIGURES_DIR / "prediction_probability_distribution.png"
+    save_path = FIGURES_DIR / f"{FILE_PREFIX[model_type]}_prediction_probability_distribution.png"
     plt.savefig(save_path, dpi=300, bbox_inches="tight")
     plt.close()
 
     print(f"Prediction probability figure saved to: {save_path}")
 
 
-def save_classification_report_file(acc, prec, rec, f1, cm, report_text, class_names):
-    save_path = FIGURES_DIR / "classification_report.txt"
+def save_classification_report_file(acc, prec, rec, f1, cm, report_text, class_names, model_type):
+    save_path = FIGURES_DIR / f"{FILE_PREFIX[model_type]}_classification_report.txt"
 
     with open(save_path, "w", encoding="utf-8") as file:
-        file.write("EVALUATION RESULTS\n")
+        file.write(f"{model_type.upper()} CNN EVALUATION RESULTS\n")
         file.write("=" * 60 + "\n")
         file.write(f"Class names: {class_names}\n")
         file.write(f"Accuracy : {acc:.4f}\n")
@@ -78,10 +88,11 @@ def save_classification_report_file(acc, prec, rec, f1, cm, report_text, class_n
 
 
 def evaluate_model():
-    ensure_paths()
+    model_path = MODEL_PATHS[MODEL_TYPE]
+    ensure_paths(model_path)
 
     _, _, test_dataset, class_names = create_datasets(DATASET_PATH)
-    model = tf.keras.models.load_model(MODEL_PATH)
+    model = tf.keras.models.load_model(model_path)
 
     y_true = []
     y_pred_prob = []
@@ -107,6 +118,8 @@ def evaluate_model():
     print("=" * 60)
     print("EVALUATION RESULTS")
     print("=" * 60)
+    print(f"Model type: {MODEL_TYPE}")
+    print(f"Model path: {model_path}")
     print(f"Class names: {class_names}")
     print(f"Accuracy : {acc:.4f}")
     print(f"Precision: {prec:.4f}")
@@ -122,9 +135,11 @@ def evaluate_model():
     print(report_text)
     print("=" * 60)
 
-    save_confusion_matrix_figure(cm, class_names)
-    save_prediction_distribution_figure(y_pred_prob)
-    save_classification_report_file(acc, prec, rec, f1, cm, report_text, class_names)
+    save_confusion_matrix_figure(cm, class_names, MODEL_TYPE)
+    save_prediction_distribution_figure(y_pred_prob, MODEL_TYPE)
+    save_classification_report_file(
+        acc, prec, rec, f1, cm, report_text, class_names, MODEL_TYPE
+    )
 
 
 if __name__ == "__main__":
