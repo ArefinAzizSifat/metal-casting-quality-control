@@ -70,9 +70,15 @@ To design, train, and evaluate CNN-based models for automated defect detection i
 
 ## 3. Dataset
 
-This implementation uses a subset of the dataset containing **front-view metal casting images** only.
+### Dataset Source
+This project uses a public industrial image dataset for metal casting defect detection.
 
-### Classes
+- **Dataset Name:** Real-life Industrial Dataset of Casting Product
+- **Source:** [Kaggle Dataset](https://www.kaggle.com/datasets/ravirajsinh45/real-life-industrial-dataset-of-casting-product)
+
+### Subset Used in This Project
+For the current implementation, only the **front-view subset** of the dataset was used:
+
 - `def_front`
 - `ok_front`
 
@@ -84,8 +90,10 @@ This implementation uses a subset of the dataset containing **front-view metal c
 - Color mode: **RGB**
 - Corrupted images found: **0**
 
+---
+
 ### Observation
-The dataset contains a moderate class imbalance, with more defective images than non-defective images.
+The dataset contains a moderate class imbalance, with more defective samples than non-defective samples.
 
 ---
 
@@ -119,6 +127,7 @@ METAL_CASTING_QC/
 ├── README.md
 └── requirements.txt
 ```
+---
 
 ## 5. Workflow
 
