@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual / conda / local env
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Model outputs
+results/models/
+results/figures/
+
+# Data
+data/processed/
+
+# Optional: ignore raw dataset if too large/private
+data/raw/
+
+# Logs
+*.log
